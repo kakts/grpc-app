@@ -77,7 +77,7 @@ func runRecordRoute(client pb.RouteGuideClient) {
 			log.Fatalf("%v.Send(%v) = %v", stream, point, err)
 		}
 	}
-	reply, err := streamCloseAndRecv()
+	reply, err := stream.CloseAndRecv()
 	if err != nil {
 		log.Fatalf("%v.CloseAndRecv() got error %v, want %v", stream, err, nil)
 	}
@@ -113,6 +113,7 @@ func runRouteChat(client pb.RouteGuideClient) {
 			if err != nil {
 				log.Fatalf("Failed to receive a note : %v", err)
 			}
+			log.Printf("Got message %s at point(%d, %d)", in.Message, in.Location.Latitude, in.Location.Longitude)
 		}
 	}()
 
@@ -144,7 +145,7 @@ func main() {
 		}
 		opts = append(opts, grpc.WithTransportCredentials(creds))
 	} else {
-		opts = append(opts, grpcWithInsecure())
+		opts = append(opts, grpc.WithInsecure())
 	}
 	conn, err := grpc.Dial(*serverAddr, opts...)
 	if err != nil {
