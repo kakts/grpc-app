@@ -10,7 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	pb "google.golang.org/grpc/examples/route_guide/routeguide"
+	pb "github.com/kakts/grpc-app/route_guide"
 	"google.golang.org/grpc/testdata"
 )
 
@@ -31,6 +31,17 @@ func printFeature(client pb.RouteGuideClient, point *pb.Point) {
 		log.Fatalf("%v.GetFeatures(_) = _, %v: ", client, err)
 	}
 	log.Println(feature)
+}
+
+func printFeature2(client pb.RouteGuideClient, point2 *pb.Point2) {
+	log.Printf("------- Getting feature for point2 (%d, %d, %d)", point2.A, point2.B, point2.C)
+	ctx, cancel := context.WithTimeout(context.Background(), 10 * time.Second)
+	defer cancel()
+	feature2, err := client.GetFeature2(ctx, point2)
+	if err != nil {
+		log.Fatalf("%v.GetFeatures2(_) = _, %v", client, err)
+	}
+	log.Println(feature2)
 }
 
 // printFeatures lists all the features within the given bounding Rectangle.
@@ -165,6 +176,9 @@ func main() {
 		Lo: &pb.Point{Latitude: 400000000, Longitude: -750000000},
 		Hi: &pb.Point{Latitude: 420000000, Longitude: -730000000},
 	})
+
+	// Point2のメンバ protoでは小文字指定だったが先頭が大文字になる
+	printFeature2(client, &pb.Point2{A: 10, B: 20, C: 30})
 
 	// RecordRoute
 	runRecordRoute(client)

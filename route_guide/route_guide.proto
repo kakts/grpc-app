@@ -8,6 +8,8 @@ service RouteGuide {
   // Obtains the feature at a given position
   rpc GetFeature(Point) returns (Feature) {}
 
+  rpc GetFeature2(Point2) returns (Feature2) {}
+
   // Obtains the Features available within the given Rectangle.  Results are
   // streamed rather than returned at once (e.g. in a response message with a
   // repeated field), as the rectangle may cover a large area and contain a
@@ -32,6 +34,12 @@ message Point {
   int32 longitude = 2;
 }
 
+message Point2 {
+  int32 a = 1;
+  int32 b = 2;
+  int32 c = 3;
+}
+
 message Rectangle {
   Point lo = 1;
 
@@ -42,6 +50,12 @@ message Feature {
   string name = 1;
 
   Point location = 2;
+}
+
+message Feature2 {
+  string name = 1;
+
+  Point2 location = 2;
 }
 
 message RouteNote {

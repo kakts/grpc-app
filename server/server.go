@@ -21,7 +21,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	pb "google.golang.org/grpc/examples/route_guide/routeguide"
+	pb "github.com/kakts/grpc-app/route_guide"
 )
 
 var (
@@ -35,6 +35,7 @@ var (
 // route_guide.pb.goの RouteGuideServer interfaceの実装
 type routeGuideServer struct {
 	savedFeatures []*pb.Feature // read-only after initialized
+	savedFeatures2 []*pb.Feature2
 
 	mu sync.Mutex // protects routeNotes
 	routeNotes map[string][]*pb.RouteNote
@@ -49,6 +50,16 @@ func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb
 
 	// No feature was found, return an unnamed feature
 	return &pb.Feature{Location: point}, nil
+}
+
+func (s *routeGuideServer) GetFeature2(ctx context.Context, point2 *pb.Point2) (*pb.Feature2, error) {
+	for _, feature := range s.savedFeatures2 {
+		if proto.Equal(feature.Location, point2) {
+			return feature, nil
+		}
+	}
+
+	return &pb.Feature2{Location: point2}, nil
 }
 
 // server side streaming RPC
