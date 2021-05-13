@@ -1,0 +1,18 @@
+version: '3'
+services:
+    # MySQL
+    db:
+        image: mysql:5.7
+        container_name: mysql_host
+        environment: 
+            MYSQL_ROOT_PASSWORD: root # 必要
+            # MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_DATABASE: local_db # 必要
+            MYSQL_USER: docker
+            MYSQL_PASSWORD: docker
+            TZ: 'Asia/Tokyo'
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        volumes:
+        - ./docker/data:/var/lib/mysql # 設定しないとデータが消える
+        ports: # localの3306番とコンテナの3306を結びつける
+        - 3307:3306
