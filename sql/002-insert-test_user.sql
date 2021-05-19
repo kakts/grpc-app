@@ -1,4 +1,4 @@
-INSERT INTO test_user
+INSERT INTO test_users
     (name,
     created_at,
     updated_at)

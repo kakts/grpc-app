@@ -1,15 +1,38 @@
 package main
 
 import (
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"fmt"
+	"time"
+
+	"github.com/kakts/grpc-app/repository"
 )
 
+type TestUser struct {
+	ID        uint       `gorm:"primary_key" json:"id"`
+	Name      string     `json:"name"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+}
+
 func main() {
-	dsn := "root:root@tcp(127.0.0.1:3307)/local_db?charset=utf8mb4&parseTime=True&loc=Local"
-	_, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(err)
+	db := repository.NewDB()
+	fmt.Println(db)
+	foundUsers := []TestUser{}
+	db.Connection.Find(&foundUsers)
+	if len(foundUsers) == 0 {
+		fmt.Printf("not found users")
 	}
+
+	fmt.Println(foundUsers)
+
+	foundUser := TestUser{}
+	db.Connection.First(&foundUser, 1)
+	// 取得できない場合はIDが初期値の1になる
+	if foundUser.ID == 0 {
+		panic("user not found")
+	}
+
+	fmt.Println(foundUser)
+	fmt.Println(foundUser.ID)
 
 }
