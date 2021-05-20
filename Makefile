@@ -13,3 +13,6 @@ table-init:
 
 insert-data:
 	mysql -h "127.0.0.1" -P 3307 -uroot -proot local_db < "./sql/002-insert-test_user.sql"
+
+setup-grpc:
+	brew install protobuf
