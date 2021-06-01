@@ -4,6 +4,7 @@ services:
     db:
         image: mysql:8.0
         container_name: mysql_host
+        platform: linux/amd64 # m1 macの場合現時点でarm64対応していないので、platformを指定しないとエラーがでる
         environment: 
             MYSQL_ROOT_PASSWORD: root # 必要
             # MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
@@ -15,4 +16,4 @@ services:
         volumes:
         - ./docker/data:/var/lib/mysql # 設定しないとデータが消える
         ports: # localの3306番とコンテナの3306を結びつける
-        - 3307:3306
+        - 3306:3306
